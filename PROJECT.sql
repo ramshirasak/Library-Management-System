@@ -1,0 +1,194 @@
+CREATE DATABASE LIBRARY;
+USE LIBRARY;
+
+CREATE TABLE BRANCH(
+Branch_no INT PRIMARY KEY auto_increment,
+Manager_Id VARCHAR(5),
+Branch_address VARCHAR(50),
+Contact_no BIGINT  UNIQUE NOT NULL
+);
+
+DESC BRANCH;
+
+INSERT INTO BRANCH (Manager_Id, Branch_address, Contact_no) VALUES
+(001,'KKM STREET,BANGLOOR',9878675645),
+(012,'EV TOWN,MANGLKOOR',7766554433),
+(123,'TRP PLAZA,KOCHI',9088990090),
+(213,'UKN TOWN,ERNAMULAM',7890998865),
+(098,'EKR TOWER,WEST BENGAL',9077231234),
+(099,'UV STREET,KOLKATHA',9988776111),
+(043,'CITY TOWER,KOCHI',7654321122),
+(026,'TVM MALL,KOLLAM',7096543223),
+(110,'TT TOWER,KOTTAYAM',7877600098),
+(165,'WRT PLAZA,BANGALKURU',9000887766);
+
+SELECT * FROM BRANCH;
+
+create table EMPLOYEE(
+Emp_Id INT PRIMARY KEY auto_increment UNIQUE,
+Emp_name VARCHAR(20),
+Position VARCHAR(25),
+Salary INT,
+Branch_no INT,
+FOREIGN KEY(Branch_no) REFERENCES BRANCH(Branch_no) ON DELETE CASCADE);
+
+DESC EMPLOYEE;
+
+DROP TABLE EMPLOYEE; 
+
+INSERT INTO EMPLOYEE VALUES(1001,"RAKESH KUMAR","MANAGER",75000,6);
+INSERT INTO EMPLOYEE(Emp_Name,Position,Salary,Branch_no) VALUES
+("ISHAL","ACCOUNTANT",40000,9),
+("SANOJ KRISHNA","SALES",65000,4),
+("AAKASH","ASSISTANT MANAGER",58000,6),
+("ARAVIND MENON","MANAGER",75000,2),
+("UMA RAJ","MANAGER",68000,9),
+("MAHESHWARI","CLERK",30000,10),
+("LEKSHMAN","SECURITY",35000,1),
+("ROSHAN","MANAGER",80000,3),
+("AMAL PAUL","MANAGER",78000,5);
+
+SELECT * FROM EMPLOYEE;
+
+
+CREATE TABLE CUSTOMER(
+Customer_Id INT PRIMARY KEY UNIQUE auto_increment  ,
+Customer_Name VARCHAR(30),
+Customer_Address VARCHAR(100) NOT NULL,
+Reg_Date DATE);
+
+DESC CUSTOMER;
+
+INSERT INTO CUSTOMER VALUES(10023,"AKSHAY","NALAKATH HOUSE,CHETTUVA","2023-12-28");
+INSERT INTO CUSTOMER(Customer_Name,Customer_Address,Reg_Date) VALUES
+("SWETHA","PULLAKKAL HOUSE,ALAPPUZHA","2024-02-14"),
+("RIKSON","ALUNGAL,KOTTAYAM","2023-11-28"),
+("HAMIZ","CHEERAMPARAMBIL,THRISSUR","2024-03-07"),
+("FIDHA FATHIMA","KAARAMKPARAMBIL,CHELAKARA","2024-01-20"),
+("AL YAZEEN","ERINJIPPURATH,CHANGARAMKULAM","2024-02-14"),
+("SRUTHY","VADAKKEVEETTIL,THRISSUR","2024-03-11"),
+("BABU","CHUNKATH HOUSE,CHAVAKKAD","2022-07-29"),
+("DEVIKA","THOKTTEPPAD,ALATHUR","2024-01-30"),
+("LIYA JOY","CHEERATTINGAL,KUNNAMKULAM","2022-09-21");
+
+SELECT * FROM CUSTOMER;
+
+CREATE TABLE ISSUESTATUS(
+ISSUE_ID INT PRIMARY KEY auto_increment,
+ISSUED_CUST INT,
+ISSUED_BOOK_NAME VARCHAR(50),
+ISSUED_DATE DATE,
+ISBN_BOOK VARCHAR(10),
+FOREIGN KEY (ISSUED_CUST) REFERENCES CUSTOMER(CUSTOMER_ID) ON DELETE CASCADE,
+FOREIGN KEY (ISBN_BOOK) REFERENCES BOOKS(ISBN) ON DELETE CASCADE);
+
+DESC ISSUESTATUS;
+
+INSERT INTO ISSUESTATUS VALUES(1101,10023,'The Great Gatsby','2024-02-01','ISBN1001');
+INSERT INTO ISSUESTATUS(ISSUED_CUST,ISSUED_BOOK_NAME,ISSUED_DATE,ISBN_BOOK) VALUES
+('10027','The Catcher in the Rye','2023-01-02','ISBN2431'),
+('10032','Jane Eyre', '2024-01-29','ISBN6123'),
+('10026','Pride and Prejudice','2024-01-09','ISBN4879'),
+('10031','Ulysses','2024-01-05','ISBN5432'),
+('10028','The Lord of the Rings','2023-11-20','ISBN7098'),
+('10024','The Light','2024-03-29','ISBN2430'),
+('10029','To Kill a Mockingbird','2024-01-08','ISBN8000'),
+('10025','Harry Potter and the Sorcerer''s Stone','2024-04-11','ISBN9654'),
+('10030','1984','2024-05-15','ISBN1011');
+
+SELECT * FROM ISSUESTATUS;
+
+CREATE TABLE BOOKS(
+ISBN VARCHAR(10) PRIMARY KEY,
+BOOK_TITLE VARCHAR(50),
+CATEGORY VARCHAR(30),
+RENTAL_PRICE INT,
+ISBN_BOOK INT,
+STATUS ENUM('YES','NO'),
+AUTHOR VARCHAR(50),
+PUBLISHER VARCHAR(40));
+
+DESC BOOKS;
+
+INSERT INTO BOOKS(ISBN,BOOK_TITLE,CATEGORY,RENTAL_PRICE,STATUS,AUTHOR,PUBLISHER) VALUES
+('ISBN1001', 'The Great Gatsby', 'Fiction', 25, 'yes', 'F.Scott Fitzgerald', 'T. Egerton'),
+('ISBN2431', 'The Catcher in the Rye', 'Non-Fiction', 32, 'yes', 'J.D.salinger', 'Little, Brown and Company'),
+('ISBN6123', 'Jane Eyre', 'Science', 50, 'yes', 'Charlotte Bronte', 'Bloomsbury'),
+('ISBN4879', 'Pride and Prejudice', 'History', 12, 'no', 'Jane Austen', 'Lippincott'),
+('ISBN5432', 'Ulysses', 'Biography', 29, 'yes', 'James Joyce', 'T. Egerton'),
+('ISBN2430', 'The Light', 'Fantasy', 33, 'yes', 'J.D. Salinger', 'Scribner'),
+('ISBN7098','The Lord of the Rings', 'Mystery', 14, 'no','J.R.R. Tolkien', 'Secker & Warburg'),
+('ISBN8000', 'To Kill a Mockingbird', 'Thriller', 34, 'yes',  'Harper Lee', 'Secker & Warburg'),
+('ISBN9654', 'Harry Potter and the Sorcerer''s Stone', 'Fantasy', 22, 'yes', 'J.K. Rowling', 'Lippincott'),
+('ISBN1011', '1984', 'Science Fiction', 40, 'yes', 'George Orwell', 'Secker & Warburg');
+
+SELECT * FROM BOOKS;
+
+CREATE TABLE RETURNSTATUS(
+RETURN_ID INT PRIMARY KEY auto_increment,
+RETURN_CUST VARCHAR(20),
+RETURN_BOOK_NAME VARCHAR(50),
+RETURN_DATE DATE,
+ISBN_BOOK2 VARCHAR(10),
+FOREIGN KEY (ISBN_BOOK2) REFERENCES BOOKS(ISBN) ON DELETE CASCADE);
+
+DESC RETURNSTATUS;
+
+INSERT INTO RETURNSTATUS VALUES(9001,'LIYA JOY','Jane Eyre', '2024-02-14','ISBN6123'),
+(9010, 'DEVIKA', 'Ulysses','2024-01-30','ISBN5432'),
+(9022, 'BABU','1984','2024-06-02','ISBN1011'),
+(9004, 'SRUTHY','To Kill a Mockingbird','2024-01-19','ISBN8000'),
+(9015, 'AL YAZEEN','The Lord of the Rings','2023-12-09','ISBN7098'),
+(9006, 'FIDHA FATHIMA', 'The Catcher in the Rye','2023-01-22','ISBN2431'),
+(9014, 'HAMIZ', 'Pride and Prejudice','2024-01-19','ISBN4879'),
+(9028, 'RIKSON', 'Harry Potter and the Sorcerer''s Stone','2024-04-28','ISBN9654'),
+(9055, 'SWETHA','The Light','2024-04-29','ISBN2430'),
+(9044, 'AKSHAY','The Great Gatsby','2024-02-26','ISBN1001');
+
+SELECT * FROM  RETURNSTATUS ;
+
+# 1. Retrieve the book title, category, and rental price of all available books.
+
+SELECT BOOK_TITLE,CATEGORY,RENTAL_PRICE FROM BOOKS  WHERE STATUS='YES';
+
+# 2. List the employee names and their respective salaries in descending order of salary.
+
+SELECT EMP_NAME,SALARY FROM EMPLOYEE ORDER BY SALARY DESC;
+
+# 3. Retrieve the book titles and the corresponding customers who have issued those books.
+
+SELECT B.BOOK_TITLE,C.CUSTOMER_NAME FROM ISSUESTATUS I 
+JOIN BOOKS B ON I.ISBN_BOOK=B.ISBN
+JOIN CUSTOMER C ON I.ISSUED_CUST=C.CUSTOMER_ID;
+
+SELECT ISSUED_BOOK_NAME,CUSTOMER_NAME FROM ISSUESTATUS
+JOIN CUSTOMER ON ISSUESTATUS.ISSUED_CUST =CUSTOMER.CUSTOMER_ID;
+
+# 4. Display the total count of books in each category.
+
+SELECT CATEGORY,COUNT(*) AS TOTAL_COUNT FROM BOOKS GROUP BY CATEGORY;
+
+#5. Retrieve the employee names and their positions for the employees whose salaries are above Rs.50,000.
+
+SELECT EMP_NAME,POSITION FROM EMPLOYEE WHERE SALARY>=50000;
+
+# . List the customer names who registered before 2022-01-01 and have not issued any books yet.
+
+SELECT CUSTOMER_NAME FROM CUSTOMER WHERE REG_DATE<'2022-01-01' AND CUSTOMER_ID NOT IN(SELECT ISSUED_CUST FROM ISSUESTATUS);
+
+# 7. Display the branch numbers and the total count of employees in each branch.
+
+SELECT BRANCH_NO,COUNT(*) AS TOTAL_EMPLOYEES FROM EMPLOYEE GROUP BY BRANCH_NO;
+
+# 8. Display the names of customers who have issued books in the month of June 2023.
+
+select customer_name from customer where month(Reg_date)=6;
+select customer_name from customer where REG_DATE BETWEEN 2023-06-01 AND 2023-06-30;
+
+# 9. Retrieve book_title from book table containing history.
+
+SELECT BOOK_TITLE FROM BOOKS WHERE CATEGORY ='HISTORY';
+
+# 10. Retrieve the branch numbers along with the count of employees for branches having more than 5 employee
+
+SELECT BRANCH_NO,COUNT(*) AS TOTAL_EMPLOYEES FROM EMPLOYEE GROUP BY BRANCH_NO HAVING TOTAL_EMPLOYEES> 5;
